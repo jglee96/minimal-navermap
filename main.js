@@ -1,24 +1,27 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+const NAVER_MAP_API =
+  `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${import.meta.env.VITE_OAPI_KEY}&submodules=geocoder,drawing`;
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+let script = document.querySelector(`script[src="${NAVER_MAP_API}"]`);
 
-setupCounter(document.querySelector('#counter'))
+if (script === null) {
+  script = document.createElement("script");
+  script.src = NAVER_MAP_API;
+  document.head.appendChild(script);
+}
+
+
+script.onload = () => {
+  var map = new naver.maps.Map("map");
+
+  const mapCenter = map.getCenter();
+
+  const marker = new naver.maps.Marker({
+    map: map,
+    position: mapCenter,
+    icon: {
+      content: /*html*/ `
+      <input type="number" />
+      `,
+    },
+  });
+};
