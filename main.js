@@ -47,6 +47,30 @@ script.onload = () => {
       strokeColor: "#6741D9",
     });
 
+    /**
+     * fromPageXYToCoord 참고
+     */
+    //   _extendProj: function() {
+    //     var t = this.get("mapSystemProjection");
+    //     if (t && !t.fromPageXYToOffset) {
+    //         var e = this._mapView;
+    //         t.fromPageXYToOffset = function(t) {
+    //             var i = e.getMapOffset();
+    //             return t.clone().sub(i).sub(this.get("containerTopLeft"))
+    //         }
+    //         ,
+    //         t.fromPageXYToPoint = function(t) {
+    //             var e = this.fromPageXYToOffset(t);
+    //             return this.fromOffsetToPoint(e)
+    //         }
+    //         ,
+    //         t.fromPageXYToCoord = function(t) {
+    //             var e = this.fromPageXYToOffset(t);
+    //             return this.fromOffsetToCoord(e)
+    //         }
+    //     }
+    // },
+
     const func = () => {
       const nbounds = new naver.maps.LatLngBounds(
         projection.fromPageXYToCoord(off1),
