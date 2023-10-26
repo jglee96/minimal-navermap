@@ -1,5 +1,5 @@
 import "./main.css";
-import { debounce } from "throttle-debounce";
+import { debounce, throttle } from "throttle-debounce";
 
 const NAVER_MAP_API = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${
   import.meta.env.VITE_OAPI_KEY
@@ -48,14 +48,14 @@ script.onload = () => {
     });
 
     const func = () => {
-      const bounds = new naver.maps.LatLngBounds(
-        projection.fromOffsetToCoord(off1),
-        projection.fromOffsetToCoord(off2)
+      const nbounds = new naver.maps.LatLngBounds(
+        projection.fromPageXYToCoord(off1),
+        projection.fromPageXYToCoord(off2)
       );
-      rect.setBounds(bounds);
+      rect.setBounds(nbounds);
     };
 
-    const throttleFun = debounce(100, func);
+    const throttleFun = throttle(100, func);
 
     naver.maps.Event.addListener(map, "bounds_changed", func);
   });
