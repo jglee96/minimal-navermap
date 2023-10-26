@@ -15,7 +15,7 @@ if (script === null) {
 
 script.onload = () => {
   const map = new naver.maps.Map("map", {
-    zoom: 19,
+    zoom: 20,
   });
   const projection = map.getProjection();
 
