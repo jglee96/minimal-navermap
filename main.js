@@ -17,24 +17,15 @@ script.onload = () => {
   const map = new naver.maps.Map("map", {
     zoom: 20,
   });
-  const projection = map.getProjection();
 
   naver.maps.Event.once(map, "init", () => {
-    const sideLength = Math.sqrt(5000);
+    const halfSide = Math.sqrt(5000) / 2;
 
     const mapCenter = map.getCenter();
     const c = naver.maps.TransCoord.fromLatLngToUTMK(mapCenter);
-    const lt = naver.maps.TransCoord.fromUTMKToLatLng(
-      c.clone().add(sideLength / 2, sideLength / 2)
-    );
-    const rb = naver.maps.TransCoord.fromUTMKToLatLng(
-      c.clone().sub(sideLength / 2, sideLength / 2)
-    );
 
-    const off1 = projection.fromCoordToOffset(lt);
-    const off2 = projection.fromCoordToOffset(rb);
-
-    console.log(off1, off2);
+    const lt = mapCenter.clone().destinationPoint(315, 50);
+    const rb = mapCenter.clone().destinationPoint(135, 50);
 
     const bounds = new naver.maps.LatLngBounds(lt, rb);
 
@@ -46,6 +37,8 @@ script.onload = () => {
       strokeWeight: 2,
       strokeColor: "#6741D9",
     });
+
+    console.log(halfSide, rect.getAreaSize());
 
     /**
      * fromPageXYToCoord 참고
@@ -72,11 +65,19 @@ script.onload = () => {
     // },
 
     const func = () => {
-      const nbounds = new naver.maps.LatLngBounds(
-        projection.fromPageXYToCoord(off1),
-        projection.fromPageXYToCoord(off2)
-      );
+
+      const mc = map.getCenter();
+      const zoom = map.getZoom();
+      const side = 25 * Math.pow(2, 21 - zoom);
+  
+      const lt = mc.clone().destinationPoint(315, side);
+      const rb = mc.clone().destinationPoint(135, side);
+  
+  
+      const nbounds = new naver.maps.LatLngBounds(lt, rb);
+
       rect.setBounds(nbounds);
+      console.log(map.getZoom(), rect.getAreaSize());
     };
 
     const throttleFun = throttle(100, func);
