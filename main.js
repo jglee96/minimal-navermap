@@ -1,9 +1,8 @@
 import "./main.css";
 import { debounce, throttle } from "throttle-debounce";
 
-const NAVER_MAP_API = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${
-  import.meta.env.VITE_OAPI_KEY
-}&submodules=geocoder,drawing`;
+const NAVER_MAP_API = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${import.meta.env.VITE_OAPI_KEY
+  }&submodules=geocoder,drawing`;
 
 let script = document.querySelector(`script[src="${NAVER_MAP_API}"]`);
 
@@ -18,70 +17,19 @@ script.onload = () => {
     zoom: 20,
   });
 
-  naver.maps.Event.once(map, "init", () => {
-    const halfSide = Math.sqrt(5000) / 2;
+  const mapDiv = document.getElementById("map");
 
-    const mapCenter = map.getCenter();
-    const c = naver.maps.TransCoord.fromLatLngToUTMK(mapCenter);
+  const seoul = document.createElement("button");
+  seoul.innerText = "서울";
+  const sBound = new naver.maps.LatLngBounds(new naver.maps.LatLng(37.56616248354732, 126.97739175284833), new naver.maps.LatLng(37.5670097059157, 126.97906914034981));
+  seoul.onclick = () => map.panToBounds(sBound);
 
-    const lt = mapCenter.clone().destinationPoint(315, 50);
-    const rb = mapCenter.clone().destinationPoint(135, 50);
+  const ulleungdo = document.createElement("button");
+  ulleungdo.innerText = "울릉도";
+  const uBound = new naver.maps.LatLngBounds(new naver.maps.LatLng(37.51984012652829, 130.8634008769862), new naver.maps.LatLng(37.52105690820206, 130.86543652438712));
+  ulleungdo.onclick = () => map.panToBounds(uBound);
 
-    const bounds = new naver.maps.LatLngBounds(lt, rb);
+  document.body.insertBefore(seoul, mapDiv);
+  document.body.insertBefore(ulleungdo, mapDiv);
 
-    const rect = new naver.maps.Rectangle({
-      map,
-      bounds,
-      fillColor: "#6741D9",
-      fillOpacity: 0.3,
-      strokeWeight: 2,
-      strokeColor: "#6741D9",
-    });
-
-    console.log(halfSide, rect.getAreaSize());
-
-    /**
-     * fromPageXYToCoord 참고
-     */
-    //   _extendProj: function() {
-    //     var t = this.get("mapSystemProjection");
-    //     if (t && !t.fromPageXYToOffset) {
-    //         var e = this._mapView;
-    //         t.fromPageXYToOffset = function(t) {
-    //             var i = e.getMapOffset();
-    //             return t.clone().sub(i).sub(this.get("containerTopLeft"))
-    //         }
-    //         ,
-    //         t.fromPageXYToPoint = function(t) {
-    //             var e = this.fromPageXYToOffset(t);
-    //             return this.fromOffsetToPoint(e)
-    //         }
-    //         ,
-    //         t.fromPageXYToCoord = function(t) {
-    //             var e = this.fromPageXYToOffset(t);
-    //             return this.fromOffsetToCoord(e)
-    //         }
-    //     }
-    // },
-
-    const func = () => {
-
-      const mc = map.getCenter();
-      const zoom = map.getZoom();
-      const side = 25 * Math.pow(2, 21 - zoom);
-  
-      const lt = mc.clone().destinationPoint(315, side);
-      const rb = mc.clone().destinationPoint(135, side);
-  
-  
-      const nbounds = new naver.maps.LatLngBounds(lt, rb);
-
-      rect.setBounds(nbounds);
-      console.log(map.getZoom(), rect.getAreaSize());
-    };
-
-    const throttleFun = throttle(100, func);
-
-    naver.maps.Event.addListener(map, "bounds_changed", func);
-  });
 };
