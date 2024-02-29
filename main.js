@@ -1,5 +1,4 @@
 import "./main.css";
-import { debounce, throttle } from "throttle-debounce";
 
 const NAVER_MAP_API = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${import.meta.env.VITE_OAPI_KEY
   }&submodules=geocoder,drawing`;
